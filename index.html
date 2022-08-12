@@ -56,15 +56,13 @@ var config = {
 
         player = this.physics.add.sprite(100, 450, 'player');
         player.setCollideWorldBounds(true);
-        player.setSize(75, 75);
+        player.setSize(75, 75); //collidion box
 
-        bullet = this.physics.add.sprite(player.x, player.y, 'bullet');
+        bullet = this.physics.add.sprite('bullet');
 
-        cursors = this.input.keyboard.createCursorKeys();
-
-        //random enemy spawn 
-        //var value = Phaser.Math.Between(1, 10);
-        //for( var i = 0; i < value; i ++){
+        //random enemy spawn - 
+        var value = Phaser.Math.Between(1, 10);
+        for( var i = 0; i < value; i ++){
 
             var x = Phaser.Math.Between(50, 750);
             var y = Phaser.Math.Between(60, 550);
@@ -73,36 +71,18 @@ var config = {
             this.physics.add.collider(enemy, player);
 
 
-        //}
+        }
 
     }
 
     function update (time, delta)
     {
 
-        if(cursors.left.isDown){
-
-            //this.physics.moveTo(player, this.mouseX, this.mouseY, 100);
-
-        }else{
-
-           // player.setVelocityX(0);
-            //player.setVelocityY(0);
-
-        }
-
-       this.mouseX = this.input.mousePointer.worldX;
-       this.mouseY = this.input.mousePointer.worldY;
-       let angle = Phaser.Math.Angle.Between(player.x, player.y, this.mouseX, this.mouseY);
-        
-       player.setRotation(angle+Math.PI/2);
-       
-
-       //test enemy rotation www
-       
+       //enemy rotation - not final
        let en_angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, player.x, player.y);
        enemy.setRotation(en_angle+Math.PI/2);
 
+       //fire weapon
        if(this.input.mousePointer.isDown && shot_control == false){
 
             bullet = this.physics.add.sprite(player.x, player.y, 'bullet');
@@ -115,9 +95,9 @@ var config = {
 
        }
 
+       //player movement
        if(keys.W.isDown){
 
-            //player movement
             this.physics.moveTo(player, this.mouseX, this.mouseY, 100);
             
        }else{
@@ -127,9 +107,12 @@ var config = {
 
        }
 
-       //this.physics.moveTo(enemy, player.x, player.y, 50);
-
-        
+       //player rotation
+       this.mouseX = this.input.mousePointer.worldX;
+       this.mouseY = this.input.mousePointer.worldY;
+       let angle = Phaser.Math.Angle.Between(player.x, player.y, this.mouseX, this.mouseY);
+       player.setRotation(angle+Math.PI/2);
+ 
     }
 
 
