@@ -10,18 +10,18 @@ export default class Main extends Phaser.Scene {
   private player_walk = 100;
   private player_sprint = 200;
 
-  private enemy_group;
-  private enemy_group1;
+  private enemy_group: any;
+  private enemy_group1: any;
 
   private bullets = 10;
   private health = 100;
   private stamina = 100;
   private enemies_remaining = 0;
 
-  private is_colliding;
+  //private is_colliding;
 
-  private bullet_text = "test";
-  private test_obj;
+  //private bullet_text = "test";
+  //private test_obj;
 
   constructor() {
 
@@ -30,16 +30,16 @@ export default class Main extends Phaser.Scene {
 
   }
 
-  bullet_hit_enemy(num) {
+  //bullet_hit_enemy(num) {
 
     //destroy objects
     //this.bullet.destroy();
     //this.enemy_group1.destroy();
-    console.log(num);
+    //console.log(num);
     //this.enemy_group1.destroy();
  
 
-  }
+  //}
 
   set_bullet_num() {
 
@@ -91,21 +91,11 @@ export default class Main extends Phaser.Scene {
       this.enemy_group1.name = "enemy " + i;
       console.log(this.enemy_group1.name);
 
-      this.physics.add.overlap(this.player,this.enemy_group1,this.bullet_hit_enemy,undefined,this);
+      //this.physics.add.overlap(this.player,this.enemy_group1,this.bullet_hit_enemy,undefined,this);
       this.enemy_group.add(this.enemy_group1);
 
     }console.log(this.enemy_group);
 
-  //  for(var i = 0; i < 10; i ++){
-
-     // enemy_group.add(x_val, y_val, 'enemy_one');
-      //console.log(value1, x_val, y_val);
-
-   // }
-
-    
-
-    
   }
 
   update() {
