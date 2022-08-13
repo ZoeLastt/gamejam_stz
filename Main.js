@@ -12,6 +12,8 @@ class Main extends Phaser.Scene{
     create ()
     {
         
+        this.add.image(480, 320, 'back');
+
         keys = this.input.keyboard.addKeys('W,D');
         player = this.physics.add.sprite(100, 450, 'player');
         player.setCollideWorldBounds(true);
@@ -35,6 +37,11 @@ class Main extends Phaser.Scene{
 
     update (time, delta)
     {
+        //player rotation
+       this.mouseX = this.input.mousePointer.worldX;
+       this.mouseY = this.input.mousePointer.worldY;
+       let angle = Phaser.Math.Angle.Between(player.x, player.y, this.mouseX, this.mouseY);
+       player.setRotation(angle+Math.PI/2);
 
        //enemy rotation - not final
        let en_angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, player.x, player.y);
@@ -45,6 +52,7 @@ class Main extends Phaser.Scene{
 
             bullet = this.physics.add.sprite(player.x, player.y, 'bullet');
             this.physics.moveTo(bullet, this.mouseX, this.mouseY, 200);
+            bullet.setRotation(angle+Math.PI/2);
             shot_control = true;
 
        }else if(!this.input.mousePointer.isDown){ // shot control only allow one shot per click
@@ -73,11 +81,7 @@ class Main extends Phaser.Scene{
 
        }
 
-       //player rotation
-       this.mouseX = this.input.mousePointer.worldX;
-       this.mouseY = this.input.mousePointer.worldY;
-       let angle = Phaser.Math.Angle.Between(player.x, player.y, this.mouseX, this.mouseY);
-       player.setRotation(angle+Math.PI/2);
+       
  
     }
 

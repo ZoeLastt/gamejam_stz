@@ -14,6 +14,7 @@ class Preload extends Phaser.Scene{
     this.load.image('player', 'resizeplayer.png');
     this.load.image('enemy_one', 'zombie_one.png');
     this.load.image('bullet', 'bullet1.png');
+    this.load.image('back', 'background.png');
 
     }
 
