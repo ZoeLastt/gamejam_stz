@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <title>Jam Game</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    
+    <script src="Preload.js"></script>
+    <script src="Main.js"></script>
+    <script src="config.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -11,112 +15,5 @@
     </style>
 </head>
 <body>
-
-<script type="text/javascript">
-
-var config = {
-    type: Phaser.AUTO,
-    width: 960,
-    height: 640,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 0 },
-            debug: false
-        }
-    },
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    }
-};
-
-    var game = new Phaser.Game(config);
-
-    var player;
-    var enemy;
-    var input;
-    var keys;
-
-    var shot_control = false;
-
-    function preload ()
-    {
-
-    this.load.image('player', 'resizeplayer.png');
-    this.load.image('enemy_one', 'zombie_one.png');
-    this.load.image('bullet', 'bullet.png');
-    }
-
-    function create ()
-    {
-        
-        keys = this.input.keyboard.addKeys("W");
-
-        player = this.physics.add.sprite(100, 450, 'player');
-        player.setCollideWorldBounds(true);
-        player.setSize(75, 75); //collidion box
-
-        bullet = this.physics.add.sprite('bullet');
-
-        //random enemy spawn - 
-        var value = Phaser.Math.Between(1, 10);
-        for( var i = 0; i < value; i ++){
-
-            var x = Phaser.Math.Between(50, 750);
-            var y = Phaser.Math.Between(60, 550);
-
-            enemy = this.physics.add.image(x, y, 'enemy_one');
-            this.physics.add.collider(enemy, player);
-
-
-        }
-
-    }
-
-    function update (time, delta)
-    {
-
-       //enemy rotation - not final
-       let en_angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, player.x, player.y);
-       enemy.setRotation(en_angle+Math.PI/2);
-
-       //fire weapon
-       if(this.input.mousePointer.isDown && shot_control == false){
-
-            bullet = this.physics.add.sprite(player.x, player.y, 'bullet');
-            this.physics.moveTo(bullet, this.mouseX, this.mouseY, 200);
-            shot_control = true;
-
-       }else if(!this.input.mousePointer.isDown){
-
-        shot_control = false;
-
-       }
-
-       //player movement
-       if(keys.W.isDown){
-
-            this.physics.moveTo(player, this.mouseX, this.mouseY, 100);
-            
-       }else{
-
-            player.setVelocityX(0);
-            player.setVelocityY(0);
-
-       }
-
-       //player rotation
-       this.mouseX = this.input.mousePointer.worldX;
-       this.mouseY = this.input.mousePointer.worldY;
-       let angle = Phaser.Math.Angle.Between(player.x, player.y, this.mouseX, this.mouseY);
-       player.setRotation(angle+Math.PI/2);
- 
-    }
-
-
-</script>
-
 </body>
 </html>
