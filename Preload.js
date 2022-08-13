@@ -10,11 +10,16 @@ class Preload extends Phaser.Scene{
     }
 
     preload(){
+    
+    //
+    this.load.image('player', 'assets/images/resizeplayer.png');
+    this.load.image('enemy_one', 'assets/images/zombie_one.png');
+    this.load.image('bullet', 'assets/images/bullet1.png');
+    this.load.image('back', 'assets/images/background.png');
+    this.load.image('tent', 'assets/images/tent1.png');
 
-    this.load.image('player', 'resizeplayer.png');
-    this.load.image('enemy_one', 'zombie_one.png');
-    this.load.image('bullet', 'bullet1.png');
-    this.load.image('back', 'background.png');
+    //ui elements
+
 
     }
 
@@ -25,7 +30,5 @@ class Preload extends Phaser.Scene{
         this.scene.start("main_scene");
 
     }
-
-    
 
 }
