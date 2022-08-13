@@ -3,9 +3,9 @@ import player from "../player/player";
 import zombie from "../zombie/Zombie";
 
 export default class Main extends Phaser.Scene {
-  private player: player | undefined;
+  private player!: player;
   private tent!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  private enemy!: zombie;
+  private enemies: zombie[];
   private keys: any;
   private bullet!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   private shotControl: boolean;
@@ -20,12 +20,19 @@ export default class Main extends Phaser.Scene {
   constructor() {
     super("main_scene");
     this.shotControl = false;
+    this.enemies = [];
   }
 
-  bullet_hit_enemy() {
-    //destroy objects
-    this.bullet.destroy();
-    this.enemy.destroy();
+  deleteEntity(id2: string, uuid: string) {
+    console.log(id2, "AND ", uuid);
+    const toDestroy = this.enemies.find((en) => en.id === uuid);
+    this.enemies = this.enemies.filter((en) => {
+      return en.id == uuid;
+    });
+
+    toDestroy?.destroy();
+
+    console.log(this.enemies);
   }
 
   create() {
@@ -44,69 +51,76 @@ export default class Main extends Phaser.Scene {
     const x = Phaser.Math.Between(50, 750);
     const y = Phaser.Math.Between(60, 550);
 
-    this.enemy = new zombie()
-      .setSize(75)
-      .setImageKey("enemy_one")
-      .setPosition({ x: x, y: y })
-      .setPhysicsController(this.physics)
-      .create();
+    this.enemies.push(
+      new zombie()
+        .setSize(75)
+        .setImageKey("enemy_one")
+        .setPosition({ x: x, y: y })
+        .setPhysicsController(this.physics)
+        .create()
+    );
 
     this.bullet = this.physics.add.sprite(0, 0, "bullet");
 
     this.add.text(10, 10, "Stamina: 100/100");
     this.add.text(10, 35, "Health: 100/100");
-    this.add.text(10, 60, `Bullets: ${this.bullets} `);
     this.add.text(740, 10, "Enemies Remaining: 10");
+    this.add.text(10, 60, `Bullets: ${this.player.bulletCount} `);
   }
 
   update() {
-    console.log(this.player);
-    if (this.player !== undefined) {
-      //player rotation
-      const mouseX = this.input.mousePointer.worldX;
-      const mouseY = this.input.mousePointer.worldY;
+    //player rotation
+    const mouseX = this.input.mousePointer.worldX;
+    const mouseY = this.input.mousePointer.worldY;
 
-      this.player.setAngle({ x: mouseX, y: mouseY });
-      this.enemy.setAngle({ x: this.player.sprite.x, y: this.player.sprite.y });
+    this.player.setAngle({ x: mouseX, y: mouseY });
 
-      this.enemy.update({ x: this.player.sprite.x, y: this.player.sprite.y });
+    this.enemies.forEach((enemy) => {
+      enemy.setAngle({ x: this.player.sprite.x, y: this.player.sprite.y });
+      enemy.update({ x: this.player.sprite.x, y: this.player.sprite.y });
+    });
 
-      if (
-        this.input.mousePointer.isDown &&
-        this.shotControl == false &&
-        this.player.bulletCount > 0
-      ) {
-        this.player.shoot();
+    if (
+      this.input.mousePointer.isDown &&
+      this.shotControl == false &&
+      this.player.bulletCount > 0
+    ) {
+      this.player.shoot();
 
-        this.bullet = this.physics.add.sprite(
-          this.player.sprite.x,
-          this.player.sprite.y,
-          "bullet"
-        );
+      this.bullet = this.physics.add.sprite(
+        this.player.sprite.x,
+        this.player.sprite.y,
+        "bullet"
+      );
 
-        this.physics.moveTo(this.bullet, mouseX, mouseY, 200);
-        this.bullet.setRotation(this.player.getCurrentAngle() + Math.PI / 2);
-        this.bullet.setSize(20, 20);
-        this.shotControl = true;
-        this.bullet.setCollideWorldBounds(true);
-        this.physics.add.overlap(
-          this.bullet,
-          this.enemy.sprite,
-          this.bullet_hit_enemy,
-          undefined,
-          this
-        );
-      } else if (!this.input.mousePointer.isDown) {
-        // shot control only allow one shot per click
+      this.physics.moveTo(this.bullet, mouseX, mouseY, 200);
+      this.bullet.setRotation(this.player.getCurrentAngle() + Math.PI / 2);
+      this.bullet.setSize(20, 20);
+      this.shotControl = true;
+      this.bullet.setCollideWorldBounds(true);
 
-        this.shotControl = false;
-      }
+      this.physics.add.overlap(
+        this.bullet,
+        this.enemies.map((en) => {
+          return en.sprite;
+        }),
+        (bullet, zombie) => {
+          bullet.destroy();
+          this.deleteEntity(bullet.name, zombie.name);
+        },
+        undefined,
+        this
+      );
+    } else if (!this.input.mousePointer.isDown) {
+      // shot control only allow one shot per click
 
-      if (this.keys.W.isDown) {
-        this.player.move({ x: mouseX, y: mouseY }, "w");
-      } else {
-        this.player.sprite.setVelocity(0);
-      }
+      this.shotControl = false;
+    }
+
+    if (this.keys.W.isDown) {
+      this.player.move({ x: mouseX, y: mouseY }, "w");
+    } else {
+      this.player.sprite.setVelocity(0);
     }
   }
 }

@@ -16,12 +16,14 @@ class zombie extends Entity implements IZombie {
   }
 
   update(playerPos: Vec2D): void {
-    this.physicsController.moveTo(
-      this.sprite,
-      playerPos.x,
-      playerPos.y,
-      this.speed
-    );
+    if (this.sprite.body) {
+      this.physicsController.moveTo(
+        this.sprite,
+        playerPos.x,
+        playerPos.y,
+        this.speed
+      );
+    }
   }
 }
 

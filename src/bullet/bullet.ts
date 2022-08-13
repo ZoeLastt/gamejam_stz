@@ -20,6 +20,7 @@ class bullet extends Entity {
   getCurrentAngle(): number {
     return super.angle;
   }
+
   update(...args: any[]): void {}
 }
 

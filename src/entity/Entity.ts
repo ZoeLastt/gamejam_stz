@@ -1,4 +1,5 @@
 import { Vec2D } from "../types/types";
+import { v4 as uuidv4 } from "uuid";
 
 interface IEntity {
   update(...args: any[]): void;
@@ -11,6 +12,7 @@ interface IEntity {
 }
 
 class Entity implements IEntity {
+  public id: string;
   private pos!: Vec2D;
   private imageKey!: string;
   private size!: Vec2D;
@@ -18,7 +20,9 @@ class Entity implements IEntity {
   public physicsController!: Phaser.Physics.Arcade.ArcadePhysics;
   public angle!: number;
 
-  constructor() {}
+  constructor() {
+    this.id = uuidv4();
+  }
 
   update(...args: any[]): void {}
 
@@ -46,7 +50,9 @@ class Entity implements IEntity {
     this.sprite = this.physicsController.add
       .sprite(this.pos.x, this.pos.y, this.imageKey)
       .setCollideWorldBounds(true)
-      .setSize(this.size.x, this.size.y);
+      .setSize(this.size.x, this.size.y)
+      .setName(this.id);
+
     return this;
   }
 
