@@ -20,10 +20,12 @@ class Preload extends Phaser.Scene{
 
     create(){
 
-        this.add.text(20,20, "preload scene");
+        this.add.text(20,20, "Loading...");
 
         this.scene.start("main_scene");
 
     }
+
+    
 
 }

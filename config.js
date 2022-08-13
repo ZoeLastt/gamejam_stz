@@ -10,6 +10,11 @@ var shot_control = false;
 var player_walk = 100;
 var player_sprint = 200;
 
+var bullets = 10;
+var health = 100;
+var stamina = 100;
+var enemies_remaining;
+
 //set up
 window.onload = function(){
 
@@ -21,7 +26,7 @@ window.onload = function(){
             default: 'arcade',
             arcade: {
                 gravity: { y: 0 },
-                debug: false
+                debug: true
             }
         },
         scene: [Preload, Main],
@@ -30,5 +35,4 @@ window.onload = function(){
 
 }
 
-//space for func, decrease health etc
 
